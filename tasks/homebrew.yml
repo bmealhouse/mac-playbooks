@@ -1,0 +1,115 @@
+---
+- name: check if homebrew is installed
+  register: homebrew_path
+  stat:
+    path: /opt/homebrew
+
+- name: install homebrew
+  script: ../install-homebrew.sh
+  when: not homebrew_path.stat.exists
+
+- name: add homebrew to PATH
+  shell: |
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bash_profile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  when: not homebrew_path.stat.exists
+
+- name: add homebrew to PATH
+  shell: |
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  when: not homebrew_path.stat.exists
+
+- name: tap homebrew repositories
+  community.general.homebrew_tap:
+    name:
+      - aws/tap
+      - beeftornado/rmtree
+      - planetscale/tap
+      - terraform-docs/tap
+      - warrensbox/tap
+    state: present
+
+- name: install homebrew formulae
+  community.general.homebrew:
+    name:
+      - asdf
+      - awscli
+      - bash
+      - bat # FIXME: i don't use this. should i keep it?
+      - fd # FIXME: i don't use this. should i keep it?
+      - go
+      - jq
+      - pipx
+      - postgresql
+      - pscale
+      - okta-aws-cli
+      - ripgrep
+      - starship
+      - stow
+      - terraform-docs/tap/terraform-docs
+      - tflint
+      - volta
+      - warrensbox/tap/tfswitch
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
+      # neovim build dependencies
+      - cmake
+      - curl
+      - gettext
+      - ninja
+    state: present
+
+- name: install homebrew casks
+  community.general.homebrew_cask:
+    name:
+      - appcleaner
+      - arc
+      - dbeaver-community
+      - ghostty
+      - gitbutler
+      - iina
+      - postman # FIXME: consider alternative
+      - raycast
+      - vivaldi
+      - warp
+      - zen
+    state: present
+
+- name: install homebrew fonts
+  community.general.homebrew_cask:
+    name:
+      - font-agave-nerd-font
+      - font-arimo-nerd-font
+      - font-aurulent-sans-mono-nerd-font
+      - font-bitstream-vera-sans-mono-nerd-font
+      - font-caskaydia-cove-nerd-font
+      - font-comic-shanns-mono-nerd-font
+      - font-daddy-time-mono-nerd-font
+      - font-droid-sans-mono-nerd-font
+      - font-fira-code-nerd-font
+      - font-go-mono-nerd-font
+      - font-hack-nerd-font
+      - font-heavy-data-nerd-font
+      - font-im-writing-nerd-font
+      - font-inconsolata-lgc-nerd-font
+      - font-iosevka-nerd-font
+      - font-jetbrains-mono-nerd-font
+      - font-liberation-nerd-font
+      - font-meslo-lg-nerd-font
+      - font-monofur-nerd-font
+      - font-mononoki-nerd-font
+      - font-open-dyslexic-nerd-font
+      - font-profont-nerd-font
+      - font-roboto-mono-nerd-font
+      - font-shure-tech-mono-nerd-font
+      - font-symbols-only-nerd-font
+      - font-tinos-nerd-font
+      - font-ubuntu-nerd-font
+      - font-victor-mono-nerd-font
+    state: present
+
+- name: upgrade all homebrew packages
+  community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true

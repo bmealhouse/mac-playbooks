@@ -1,0 +1,15 @@
+---
+- name: create ~/.zsh
+  file:
+    path: ~/.zsh
+    state: directory
+
+- name: download git-completion.bash
+  get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+    dest: ~/.zsh/git-completion.bash
+
+- name: download git-completion.zsh
+  get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
+    dest: ~/.zsh/_git

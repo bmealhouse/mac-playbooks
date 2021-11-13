@@ -1,0 +1,15 @@
+---
+- name: create ~/dev
+  file:
+    path: ~/dev
+    state: directory
+
+- name: clone dotfiles repo
+  git:
+    repo: git@github.com:bmealhouse/dotfiles.git
+    dest: ~/dotfiles
+
+- name: create symlinks using stow
+  shell: stow --adopt .
+  args:
+    chdir: ~/dotfiles
