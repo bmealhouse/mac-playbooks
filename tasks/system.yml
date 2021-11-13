@@ -1,0 +1,358 @@
+---
+######################################################################
+# General
+######################################################################
+
+- name: select “Dark” appearance
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleInterfaceStyle
+    type: string
+    value: Dark
+    state: present
+
+- name: always show scrollbars
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleShowScrollBars
+    type: string
+    value: Always
+    state: present
+
+- name: jump to the spot that's clicked in the scrollbar
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleScrollerPagingBehavior
+    type: bool
+    value: true
+    state: present
+
+######################################################################
+# Trackpad
+######################################################################
+
+- name: disable “natural” scrolling
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: com.apple.swipescrolldirection
+    type: bool
+    value: false
+    state: present
+
+- name: disable the Launchpad gesture (pinch with thumb and three fingers)
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: showLaunchpadGestureEnabled
+    type: int
+    value: 0
+    state: present
+
+- name: disable the Swipe between pages gesture
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleEnableSwipeNavigateWithScrolls
+    type: int
+    value: 0
+    state: present
+
+######################################################################
+# Desktop & Screen Saver
+######################################################################
+
+- name: turn off screen saver
+  community.general.osx_defaults:
+    host: currentHost
+    domain: com.apple.screensaver
+    key: idleTime
+    type: int
+    value: 0
+    state: present
+
+- name: turn off hot corners (top left)
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-tl-corner
+    type: int
+    value: 0
+    state: present
+
+- name: turn off hot corners (top right)
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-tr-corner
+    type: int
+    value: 0
+    state: present
+
+- name: turn off hot corners (bottom left)
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-bl-corner
+    type: int
+    value: 0
+    state: present
+
+- name: turn off hot corners (bottom right)
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-br-corner
+    type: int
+    value: 0
+    state: present
+
+######################################################################
+# Finder
+######################################################################
+
+- name: show all filename extensions
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleShowAllExtensions
+    type: bool
+    value: true
+    state: present
+
+- name: show status bar
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: ShowStatusBar
+    type: bool
+    value: true
+    state: present
+
+- name: keep folders on top when sorting by name
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: _FXSortFoldersFirst
+    type: bool
+    value: true
+    state: present
+
+- name: when performing a search, search the current folder by default
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXDefaultSearchScope
+    type: string
+    value: SCcf
+    state: present
+
+- name: disable the warning when changing a file extension
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    type: boolean
+    value: false
+    state: present
+
+- name: disable the warning before removing from iClould drive
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXEnableRemoveFromICloudDriveWarning
+    type: bool
+    value: false
+    state: present
+
+- name: use icon view in all Finder windows by default
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: FXPreferredViewStyle
+    type: string
+    value: icnv
+    state: present
+
+- name: print showItemInfo for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :DesktopViewSettings:IconViewSettings:showItemInfo"
+  register: showItemInfo_Desktop_IconView
+  changed_when: false
+
+- name: set showItemInfo for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :DesktopViewSettings:IconViewSettings:showItemInfo true"
+  when: showItemInfo_Desktop_IconView.stdout != "true"
+
+- name: print showItemInfo for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :FK_StandardViewSettings:IconViewSettings:showItemInfo"
+  register: showItemInfo_FK_Standard_IconView
+  changed_when: false
+
+- name: set showItemInfo for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :FK_StandardViewSettings:IconViewSettings:showItemInfo true"
+  when: showItemInfo_FK_Standard_IconView.stdout != "true"
+
+- name: print showItemInfo for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :StandardViewSettings:IconViewSettings:showItemInfo"
+  register: showItemInfo_Standard_IconView
+  changed_when: false
+
+- name: set showItemInfo for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :StandardViewSettings:IconViewSettings:showItemInfo true"
+  when: showItemInfo_Standard_IconView.stdout != "true"
+
+- name: print arrangeBy for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :DesktopViewSettings:IconViewSettings:arrangeBy"
+  register: arrangeBy_Desktop_IconView
+  changed_when: false
+
+- name: set arrangeBy for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid"
+  when: arrangeBy_Desktop_IconView.stdout != "grid"
+
+- name: print arrangeBy for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :FK_StandardViewSettings:IconViewSettings:arrangeBy"
+  register: arrangeBy_FK_Standard_IconView
+  changed_when: false
+
+- name: set arrangeBy for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid"
+  when: arrangeBy_FK_Standard_IconView.stdout != "grid"
+
+- name: print arrangeBy for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :StandardViewSettings:IconViewSettings:arrangeBy"
+  register: arrangeBy_Standard_IconView
+  changed_when: false
+
+- name: set arrangeBy for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid"
+  when: arrangeBy_Standard_IconView.stdout != "grid"
+
+- name: print gridSpacing for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :DesktopViewSettings:IconViewSettings:gridSpacing"
+  register: gridSpacing_Desktop_IconView
+  changed_when: false
+
+- name: set gridSpacing for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :DesktopViewSettings:IconViewSettings:gridSpacing 100"
+  when: gridSpacing_Desktop_IconView.stdout != "100.000000"
+
+- name: print gridSpacing for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :FK_StandardViewSettings:IconViewSettings:gridSpacing"
+  register: gridSpacing_FK_Standard_IconView
+  changed_when: false
+
+- name: set gridSpacing for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :FK_StandardViewSettings:IconViewSettings:gridSpacing 100"
+  when: gridSpacing_FK_Standard_IconView.stdout != "100.000000"
+
+- name: print gridSpacing for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :StandardViewSettings:IconViewSettings:gridSpacing"
+  register: gridSpacing_Standard_IconView
+  changed_when: false
+
+- name: set gridSpacing for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :StandardViewSettings:IconViewSettings:gridSpacing 100"
+  when: gridSpacing_Standard_IconView.stdout != "100.000000"
+
+- name: print iconSize for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :DesktopViewSettings:IconViewSettings:iconSize"
+  register: iconSize_Desktop_IconView
+  changed_when: false
+
+- name: set iconSize for Desktop:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :DesktopViewSettings:IconViewSettings:iconSize 80"
+  when: iconSize_Desktop_IconView.stdout != "80.000000"
+
+- name: print iconSize for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :FK_StandardViewSettings:IconViewSettings:iconSize"
+  register: iconSize_FK_Standard_IconView
+  changed_when: false
+
+- name: set iconSize for FK_Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :FK_StandardViewSettings:IconViewSettings:iconSize 80"
+  when: iconSize_FK_Standard_IconView.stdout != "80.000000"
+
+- name: print iconSize for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Print :StandardViewSettings:IconViewSettings:iconSize"
+  register: iconSize_Standard_IconView
+  changed_when: false
+
+- name: set iconSize for Standard:IconViewSettings
+  command: /usr/libexec/PlistBuddy ~/Library/Preferences/com.apple.finder.plist -c "Set :StandardViewSettings:IconViewSettings:iconSize 80"
+  when: iconSize_Standard_IconView.stdout != "80.000000"
+
+###############################################################################
+# Dock & Menu Bar
+###############################################################################
+
+- name: automatically hide and show the dock
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: true
+    state: present
+
+- name: show only open applications in the dock
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: static-only
+    type: bool
+    value: true
+    state: present
+
+- name: make dock icons of hidden applications translucent
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: showhidden
+    type: bool
+    value: true
+    state: present
+
+- name: don't show recent applications in dock
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: show-recents
+    type: bool
+    value: false
+    state: present
+
+- name: remove Spotlight search from the Menu Bar
+  community.general.osx_defaults:
+    host: currentHost
+    domain: com.apple.Spotlight
+    key: MenuItemHidden
+    type: int
+    value: 1
+    state: present
+
+###############################################################################
+# Software Update
+###############################################################################
+
+- name: enable the automatic update check
+  community.general.osx_defaults:
+    domain: com.apple.SoftwareUpdate
+    key: AutomaticCheckEnabled
+    type: bool
+    value: true
+    state: present
+
+- name: check for software updates daily, not just once per week
+  community.general.osx_defaults:
+    domain: com.apple.SoftwareUpdate
+    key: ScheduleFrequency
+    type: int
+    value: 1
+    state: present
+
+- name: download newly available updates in background
+  community.general.osx_defaults:
+    domain: com.apple.SoftwareUpdate
+    key: AutomaticDownload
+    type: int
+    value: 1
+    state: present
+
+- name: turn on app auto-update
+  community.general.osx_defaults:
+    domain: com.apple.commerce
+    key: AutoUpdate
+    type: bool
+    value: true
+    state: present
+
+- name: allow the App Store to reboot machine on macOS updates
+  community.general.osx_defaults:
+    domain: com.apple.commerce
+    key: AutoUpdateRestartRequired
+    type: bool
+    value: true
+    state: present
