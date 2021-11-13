@@ -1,0 +1,28 @@
+---
+- name: get computer name
+  command: scutil --get ComputerName
+  register: computer_name
+  changed_when: false
+
+- name: set computer name
+  command: scutil --set ComputerName "aliendev"
+  when: computer_name.stdout != "aliendev"
+  become: true
+
+- name: get local host name
+  command: scutil --get LocalHostName
+  register: local_host_name
+  changed_when: false
+
+- name: set local host name
+  command: scutil --set LocalHostName "aliendev"
+  when: local_host_name.stdout != "aliendev"
+  become: true
+
+- name: set net BIOS name
+  community.general.osx_defaults:
+    domain: /Library/Preferences/SystemConfiguration/com.apple.smb.server
+    key: NetBIOSName
+    type: string
+    value: aliendev
+    state: present

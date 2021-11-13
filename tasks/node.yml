@@ -1,0 +1,40 @@
+---
+- name: install or upgrade node
+  command: volta install node
+
+- name: install or upgrade ni
+  command: volta install @antfu/ni@latest
+
+- name: install or upgrade spot
+  command: volta install spot@latest
+
+- name: install or upgrade fast-cli
+  command: volta install fast-cli@latest
+
+- name: install or upgrade turbo
+  command: volta install turbo@latest
+
+- name: list npm config
+  command: npm config list
+  register: npm_config
+  changed_when: false
+
+- name: set npm default author name
+  command: npm set init-author-name 'Brent Mealhouse'
+  when: "'init-author-name' not in npm_config.stdout"
+
+- name: set npm default author email
+  command: npm set init-author-email 'bmealhouse@gmail.com'
+  when: "'init-author-email' not in npm_config.stdout"
+
+- name: set npm default author url
+  command: npm set init-author-url 'https://bmealhouse.dev/'
+  when: "'init-author-url' not in npm_config.stdout"
+
+- name: set npm default license
+  command: npm set init-license 'MIT'
+  when: "'init-license' not in npm_config.stdout"
+
+- name: set npm package installation strategy
+  command: npm set save-exact true
+  when: "'save-exact' not in npm_config.stdout"

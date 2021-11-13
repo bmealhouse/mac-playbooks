@@ -1,0 +1,97 @@
+---
+- name: check if homebrew is installed
+  register: homebrew_path
+  stat:
+    path: /opt/homebrew
+
+- name: install homebrew
+  script: ../install-homebrew.sh
+  when: not homebrew_path.stat.exists
+
+- name: add homebrew to PATH
+  shell: |
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bash_profile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  when: not homebrew_path.stat.exists
+
+- name: tap homebrew repositories
+  community.general.homebrew_tap:
+    name:
+      - beeftornado/rmtree
+    state: present
+
+- name: install homebrew formulae
+  community.general.homebrew:
+    name:
+      - bash
+      - bat
+      - exiftool
+      - fd
+      - go
+      - jq
+      - neovim
+      - pipx
+      - ripgrep
+      - starship
+      - stow
+      - volta
+      - youtube-dl
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
+    state: present
+
+- name: install homebrew casks
+  community.general.homebrew_cask:
+    name:
+      - 1password
+      - appcleaner
+      - arc
+      - betterdisplay
+      - figma
+      - ghostty
+      - gitbutler
+      - iina
+      - ilok-license-manager
+      - raycast
+      - steam
+      - visual-studio-code
+      - warp
+    state: present
+
+- name: install homebrew fonts
+  community.general.homebrew_cask:
+    name:
+      - font-agave-nerd-font
+      - font-arimo-nerd-font
+      - font-aurulent-sans-mono-nerd-font
+      - font-bitstream-vera-sans-mono-nerd-font
+      - font-caskaydia-cove-nerd-font
+      - font-comic-shanns-mono-nerd-font
+      - font-daddy-time-mono-nerd-font
+      - font-droid-sans-mono-nerd-font
+      - font-fira-code-nerd-font
+      - font-go-mono-nerd-font
+      - font-hack-nerd-font
+      - font-heavy-data-nerd-font
+      - font-im-writing-nerd-font
+      - font-inconsolata-lgc-nerd-font
+      - font-iosevka-nerd-font
+      - font-jetbrains-mono-nerd-font
+      - font-liberation-nerd-font
+      - font-meslo-lg-nerd-font
+      - font-monofur-nerd-font
+      - font-mononoki-nerd-font
+      - font-open-dyslexic-nerd-font
+      - font-profont-nerd-font
+      - font-roboto-mono-nerd-font
+      - font-shure-tech-mono-nerd-font
+      - font-symbols-only-nerd-font
+      - font-tinos-nerd-font
+      - font-ubuntu-nerd-font
+      - font-victor-mono-nerd-font
+    state: present
+
+- name: upgrade all homebrew packages
+  community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true
