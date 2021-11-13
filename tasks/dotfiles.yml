@@ -1,0 +1,28 @@
+---
+- name: create ~/dev
+  file:
+    path: ~/dev
+    state: directory
+
+- name: clone dotfiles repo
+  git:
+    repo: git@github.com:bmealhouse/dotfiles.git
+    dest: ~/dev/dotfiles
+
+- name: create a symbolic link for .bashrc
+  file:
+    src: ~/dev/dotfiles/bash/.bashrc
+    dest: ~/.bashrc
+    state: link
+
+- name: create a symbolic link for .zshrc
+  file:
+    src: ~/dev/dotfiles/zsh/.zshrc
+    dest: ~/.zshrc
+    state: link
+
+- name: create a symbolic link for neovim
+  file:
+    src: ~/dev/dotfiles/nvim
+    dest: ~/.config/nvim
+    state: link

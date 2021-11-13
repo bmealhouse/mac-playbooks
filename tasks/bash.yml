@@ -1,0 +1,23 @@
+---
+- name: load ~/.bashrc from ~/.bash_profile
+  lineinfile:
+    path: ~/.bash_profile
+    line: "if [ -f ~/.bashrc ]; then . ~/.bashrc; fi"
+
+- name: read /etc/shells
+  register: etc_shells
+  shell: cat /etc/shells
+
+- name: add homebrew bash shell
+  shell: echo "/opt/homebrew/bin/bash" | sudo tee -a /etc/shells
+  when: "'/opt/homebrew/bin/bash' not in etc_shells.stdout"
+
+- name: create ~/.bash
+  file:
+    path: ~/.bash
+    state: directory
+
+- name: download .git-completion.bash
+  get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+    dest: ~/.bash/.git-completion.bash
