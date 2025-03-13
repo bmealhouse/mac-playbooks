@@ -12,14 +12,6 @@
   shell: echo "/opt/homebrew/bin/bash" | sudo tee -a /etc/shells
   when: "'/opt/homebrew/bin/bash' not in etc_shells.stdout"
 
-- name: get the current shell
-  shell: echo $SHELL
-  register: current_shell
-
-- name: default to the homebrew bash shell
-  shell: chsh -s /opt/homebrew/bin/bash
-  when: current_shell.stdout != "/opt/homebrew/bin/bash"
-
 - name: create ~/.bash
   file:
     path: ~/.bash
@@ -29,6 +21,21 @@
   get_url:
     url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
     dest: ~/.bash/.git-completion.bash
+
+- name: create ~/.zsh
+  file:
+    path: ~/.zsh
+    state: directory
+
+- name: download git-completion.bash
+  get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+    dest: ~/.zsh/git-completion.bash
+
+- name: download git-completion.zsh
+  get_url:
+    url: https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
+    dest: ~/.zsh/_git
 
 - name: create ~/dev
   file:
@@ -44,6 +51,12 @@
   file:
     src: ~/dev/dotfiles/bash/.bashrc
     dest: ~/.bashrc
+    state: link
+
+- name: create a symbolic link for .zshrc
+  file:
+    src: ~/dev/dotfiles/zsh/.zshrc
+    dest: ~/.zshrc
     state: link
 
 - name: create a symbolic link for neovim

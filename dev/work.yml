@@ -2,8 +2,12 @@
 - hosts: all
 
   tasks:
-    - import_tasks: tasks/ssh.yml
-    - import_tasks: tasks/git.yml
+    - import_tasks: tasks/ssh-work.yml
+      tags:
+        - ssh
+    - import_tasks: tasks/git-work.yml
+      tags:
+        - git
     - import_tasks: tasks/system.yml
       tags:
         - system
@@ -12,11 +16,11 @@
       tags:
         - brew
         - up
-    - import_tasks: tasks/node.yml
+    - import_tasks: tasks/node-work.yml
       tags:
         - node
         - up
-    - import_tasks: tasks/dotfiles.yml
+    - import_tasks: tasks/dotfiles-work.yml
       tags:
         - dotfiles
         - up

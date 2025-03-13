@@ -14,19 +14,25 @@
     eval "$(/opt/homebrew/bin/brew shellenv)"
   when: not homebrew_path.stat.exists
 
+- name: add homebrew to PATH
+  shell: |
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  when: not homebrew_path.stat.exists
+
 - name: tap homebrew repositories
   community.general.homebrew_tap:
     name:
       - aws/tap
       - beeftornado/rmtree
-      - homebrew/cask-fonts
-      - homebrew/cask-versions
+      - hashicorp/tap
       - planetscale/tap
     state: present
 
 - name: install homebrew formulae
   community.general.homebrew:
     name:
+      - asdf
       - aws-sam-cli
       - awscli
       - bash
@@ -37,9 +43,10 @@
       - neovim
       - pipx
       - pscale
+      - okta-aws-cli
       - ripgrep
       - starship
-      - terraform
+      - hashicorp/tap/terraform
       - volta
       - zsh-autosuggestions
       - zsh-syntax-highlighting
@@ -48,22 +55,15 @@
 - name: install homebrew casks
   community.general.homebrew_cask:
     name:
-      - 1password
-      - alacritty
-      - amazon-workspaces
       - appcleaner
       - arc
-      - authy
       - betterdisplay
-      - google-chrome
+      - ghostty
+      - gitbutler
       - iina
-      - perimeter81
       - postman
       - raycast
-      - slack
-      - visual-studio-code
       - warp
-      - zed
     state: present
 
 - name: install homebrew fonts
