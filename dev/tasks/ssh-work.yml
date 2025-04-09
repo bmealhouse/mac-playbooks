@@ -25,3 +25,4 @@
   community.crypto.openssh_keypair:
     path: ~/.ssh/gitlab_bill_ed25519
     type: ed25519
+    comment: brent.mealhouse@hq.bill.com
