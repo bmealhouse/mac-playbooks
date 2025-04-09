@@ -25,8 +25,9 @@
     name:
       - aws/tap
       - beeftornado/rmtree
-      - hashicorp/tap
       - planetscale/tap
+      - terraform-docs/tap
+      - warrensbox/tap
     state: present
 
 - name: install homebrew formulae
@@ -46,8 +47,10 @@
       - okta-aws-cli
       - ripgrep
       - starship
-      - hashicorp/tap/terraform
+      - terraform-docs/tap/terraform-docs
+      - tflint
       - volta
+      - warrensbox/tap/tfswitch
       - zsh-autosuggestions
       - zsh-syntax-highlighting
     state: present
