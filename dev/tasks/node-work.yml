@@ -11,6 +11,9 @@
 - name: install or upgrade fast-cli
   command: volta install fast-cli@latest
 
+- name: install or upgrade turbo
+  command: volta install turbo@latest
+
 - name: list npm config
   command: npm config list
   register: npm_config
